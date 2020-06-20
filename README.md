@@ -3,7 +3,7 @@
 ## Purpose
 Construction of hexagonal maps using Gravenguild's Hexton Tiles
 
-![](gifs/sample_tile_insertion)
+![](https://raw.githubusercontent.com/ifilot/hextontiler/master/gifs/sample_tile_insertion.gif)
 
 ## Compilation (Linux Debian)
 Make sure you have the following dependencies installed
