@@ -65,12 +65,16 @@ MainWindow::MainWindow() {
     // create actions for view menu
     action_center_map->setText(tr("Center map"));
     action_center_map->setShortcut(Qt::Key_0);
+    action_center_map->setIcon(QIcon(":/assets/icons/center.png"));
 
     // create actions for tools menu
     action_construct_bom->setText(tr("Construct Bill of Materials"));
+    action_construct_bom->setShortcut(Qt::CTRL + Qt::Key_B);
+    action_construct_bom->setIcon(QIcon(":/assets/icons/list.png"));
 
     // create actions for about menu
     action_about->setText(tr("About"));
+    action_about->setShortcut(Qt::CTRL + Qt::Key_Question);
     action_about->setIcon(QIcon(":/assets/icons/info.png"));
 
     // add actions to file menu
@@ -115,7 +119,7 @@ MainWindow::MainWindow() {
  * @brief      Open a new object file
  */
 void MainWindow::open() {
-    QString filename = QFileDialog::getOpenFileName(this, tr("Open file"), "", tr("Hexon tile map (*.htm);;"));
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open file"), "", tr("Hexton tile map (*.htm);;"));
 
     if(filename.isEmpty()) {
         return;
