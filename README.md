@@ -1,5 +1,7 @@
 # Hextontiler
 
+Disclaimer: Hexton Hills is a Kickstarter campaign by Graven Guild, for more information, please visit https://www.kickstarter.com/projects/gravenguild/hexton-hills-tabletop-campaign-map-tiles.
+
 ## Purpose
 Construction of hexagonal maps using [Gravenguild's Hexton Tiles](https://www.gravenguild.com/). The main idea is that you can design your game map before printing it, potentially saving on material and giving you a good impression of what your map would look like before assembling it in real-life.
 
