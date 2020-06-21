@@ -223,6 +223,7 @@ void AnaglyphWidget::window_move_event() {
 void AnaglyphWidget::load_shaders() {
     // create regular shaders
     shader_manager->create_shader_program("sprite_shader", ShaderProgramType::SpriteShader, ":/assets/shaders/sprite.vs", ":/assets/shaders/sprite.fs");
+    shader_manager->create_shader_program("background_shader", ShaderProgramType::SpriteShader, ":/assets/shaders/background.vs", ":/assets/shaders/background.fs");
 }
 
 /**

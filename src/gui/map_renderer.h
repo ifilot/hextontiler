@@ -49,16 +49,39 @@ private:
     std::shared_ptr<Map> map;
 
 public:
+    /**
+     * @brief      Constructs a new instance.
+     *
+     * @param[in]  _shader_manager  The shader manager
+     * @param[in]  _scene           The scene
+     * @param[in]  _tile_manager    The tile manager
+     */
     MapRenderer(const std::shared_ptr<ShaderProgramManager>& _shader_manager,
                 const std::shared_ptr<Scene>& _scene,
                 const std::shared_ptr<TileManager>& _tile_manager);
 
+    /**
+     * @brief      Draw the actual tiles
+     */
     void draw();
 
+    /**
+     * @brief      Draw map background
+     */
+    void draw_template_map();
+
+    /**
+     * @brief      Sets the map.
+     *
+     * @param[in]  _map  The map
+     */
     inline void set_map(const std::shared_ptr<Map>& _map) {
         this->map = _map;
     }
 
 private:
+    /**
+     * @brief      Build vertex array objects
+     */
     void build_vao();
 };

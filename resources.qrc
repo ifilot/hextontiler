@@ -1,6 +1,8 @@
 <RCC>
     <qresource prefix="/">
         <file>assets/configuration/tiledata.json</file>
+        <file>assets/shaders/background.fs</file>
+        <file>assets/shaders/background.vs</file>
         <file>assets/shaders/sprite.fs</file>
         <file>assets/shaders/sprite.vs</file>
         <file>assets/tiles/tilespackage.png</file>

@@ -59,7 +59,7 @@ public:
      * @param       pointer to vector holding ray direction
      * @return      void
      */
-    void calculate_ray(const QPoint& mouse_position, QVector3D* ray_origin, QVector3D* ray_direction);
+    void calculate_ray(const QPoint& mouse_position, QVector3D* ray_origin, QVector3D* ray_direction) const;
 
     /**
      * @brief      Calculates the point of intersection of a ray with a plane
@@ -74,7 +74,7 @@ public:
     QVector3D calculate_ray_plane_intersection(const QVector3D& ray_origin,
                                                const QVector3D& ray_vector,
                                                const QVector3D& plane_origin,
-                                               const QVector3D& plane_normal);
+                                               const QVector3D& plane_normal) const;
 
     /**
      * @brief      Convert hexcube coordinates to Cartesian
@@ -107,6 +107,15 @@ public:
     inline const QVector3D& get_hexpos_highlight() const {
         return this->tile_highlight;
     }
+
+    /**
+     * @brief      Gets the hexpos given mouse position.
+     *
+     * @param[in]  mouse_position  The mouse position
+     *
+     * @return     The hexpos at mouse position.
+     */
+    QVector3D get_hexpos_at_mousepos(const QPoint& mouse_position) const;
 
     /**
      * @brief      Update view matrix

@@ -37,7 +37,7 @@ Scene::Scene() {
  * @param       pointer to vector holding ray direction
  * @return      void
  */
-void Scene::calculate_ray(const QPoint& mouse_position, QVector3D* ray_origin, QVector3D* ray_direction) {
+void Scene::calculate_ray(const QPoint& mouse_position, QVector3D* ray_origin, QVector3D* ray_direction) const {
     const float screen_width = (float)this->canvas_width;
     const float screen_height = (float)this->canvas_height;
 
@@ -71,7 +71,7 @@ void Scene::calculate_ray(const QPoint& mouse_position, QVector3D* ray_origin, Q
 QVector3D Scene::calculate_ray_plane_intersection(const QVector3D& ray_origin,
                                                   const QVector3D& ray_vector,
                                                   const QVector3D& plane_origin,
-                                                  const QVector3D& plane_normal) {
+                                                  const QVector3D& plane_normal) const {
 
     float dotprod = QVector3D::dotProduct(ray_vector, plane_normal);
 
@@ -118,6 +118,26 @@ void Scene::set_mouse_pos(const QVector3D& worldpos) {
         this->tile_highlight = new_tile_highlight;
         emit(signal_update_screen());
     }
+}
+
+/**
+ * @brief      Gets the hexpos given mouse position.
+ *
+ * @param[in]  mouse_position  The mouse position
+ *
+ * @return     The hexpos at mouse position.
+ */
+QVector3D Scene::get_hexpos_at_mousepos(const QPoint& mouse_position) const {
+    QVector3D ray_origin, ray_direction;
+    this->calculate_ray(mouse_position, &ray_origin, &ray_direction);
+    auto worldpos = this->calculate_ray_plane_intersection(ray_origin, ray_direction, QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 0.0f, 1.0f));
+    worldpos += this->camera_look_at;
+    auto hexpos = this->cartesian_to_hexcube(worldpos);
+    hexpos[0] = std::round(hexpos[0]);
+    hexpos[1] = std::round(hexpos[1]);
+    hexpos[2] = std::round(hexpos[2]);
+
+    return hexpos;
 }
 
 /**
