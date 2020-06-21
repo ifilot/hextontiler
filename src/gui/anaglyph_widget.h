@@ -46,6 +46,7 @@
 #include <boost/format.hpp>
 #include <math.h>
 #include <string>
+#include <algorithm>
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>

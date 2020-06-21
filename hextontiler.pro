@@ -40,8 +40,8 @@ SOURCES       = src/main.cpp \
 
 QT           += core gui widgets
 CONFIG       += force_debug_info
+CONFIG       += c++17
 
-# include boost in Linux
 linux {
     QMAKE_CXXFLAGS+= -fopenmp
     QMAKE_LFLAGS +=  -fopenmp

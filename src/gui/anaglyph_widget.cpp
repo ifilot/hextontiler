@@ -192,9 +192,7 @@ void AnaglyphWidget::mouseMoveEvent(QMouseEvent *event) {
  */
 void AnaglyphWidget::wheelEvent(QWheelEvent *event) {
     this->scene->camera_position += event->delta() * 0.01f * QVector3D(0, 0, 1);
-    if(this->scene->camera_position[2] < 4.0) {
-        this->scene->camera_position[2] = 4.0;
-    }
+    this->scene->camera_position[2] = glm::clamp(this->scene->camera_position[2], 4.0f, 40.0f);
 
     float w = (float)this->scene->canvas_width;
     float h = (float)this->scene->canvas_height;
