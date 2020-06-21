@@ -22,6 +22,8 @@ To save the current map, either press **CTRL+S** or go to `File > Save`. Maps ar
 ### Building Bill of Materials
 If you want an overview how many tiles of which type is in your map, go to `Tools > Construct Bill of Materials`.
 
+![](https://raw.githubusercontent.com/ifilot/hextontiler/master/gifs/sample_bill_of_materials.gif)
+
 ## Installation (Microsoft Windows)
 User-friendly installers are made for Windows. You can find the installers on the [releases](https://github.com/ifilot/hextontiler/releases) page or download them directly using the links below
 | Version | Download link |
