@@ -104,6 +104,9 @@ public:
     }
 
 public slots:
+    /**
+     * @brief      Clean up this object
+     */
     void cleanup();
 
 protected:
@@ -165,6 +168,9 @@ private:
     void set_projection_matrix();
 
 private slots:
+    /**
+     * @brief      Action to perform when a frame is swapped
+     */
     void action_frame_swapped();
 
 signals:

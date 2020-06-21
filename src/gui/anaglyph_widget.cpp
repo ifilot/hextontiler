@@ -183,8 +183,6 @@ void AnaglyphWidget::mouseMoveEvent(QMouseEvent *event) {
     auto pos = this->scene->calculate_ray_plane_intersection(ray_origin, ray_direction, QVector3D(0.0, 0.0, 0.0), QVector3D(0.0, 0.0, 1.0));
     pos += this->scene->camera_look_at;
     this->scene->set_mouse_pos(pos);
-
-    this->update();
 }
 
 /**

@@ -109,10 +109,15 @@ QVector3D Scene::cartesian_to_hexcube(const QVector3D& cartcoord) const {
  * @brief      Set mouse position in world space to determine which tile to highlight
  */
 void Scene::set_mouse_pos(const QVector3D& worldpos) {
-    this->tile_highlight = this->cartesian_to_hexcube(worldpos);
-    tile_highlight[0] = std::round(tile_highlight[0]);
-    tile_highlight[1] = std::round(tile_highlight[1]);
-    tile_highlight[2] = std::round(tile_highlight[2]);
+    auto new_tile_highlight = this->cartesian_to_hexcube(worldpos);
+    new_tile_highlight[0] = std::round(new_tile_highlight[0]);
+    new_tile_highlight[1] = std::round(new_tile_highlight[1]);
+    new_tile_highlight[2] = std::round(new_tile_highlight[2]);
+
+    if(new_tile_highlight != this->tile_highlight) {
+        this->tile_highlight = new_tile_highlight;
+        emit(signal_update_screen());
+    }
 }
 
 /**

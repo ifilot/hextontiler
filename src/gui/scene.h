@@ -28,7 +28,9 @@
  * @brief      This class describes a camera alignment.
  */
 
-class Scene {
+class Scene : public QObject {
+    Q_OBJECT
+
 public:
     QMatrix4x4 projection;
     QMatrix4x4 view;
@@ -127,4 +129,11 @@ private:
      * @param[in]  dist  The distance
      */
     void build_transformation_matrices(float dist);
+
+signals:
+    /**
+     * @brief      Signal to update the screen
+     */
+    void signal_update_screen();
+
 };
