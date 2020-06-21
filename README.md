@@ -33,7 +33,8 @@ User-friendly installers are made for Windows. You can find the installers on th
 ## Compilation (Linux Debian)
 This is for advanced users who would like to run Hextontiler on Linux. These instructions are based on Linux Debian, but can be readily extended to different Linux branches. Make sure you have the following dependencies installed
 ```
-sudo apt -y install qt5-default qtmultimedia5-dev libqt5multimedia5-plugins libqt5gamepad5-dev build-essential cmake libboost-all-dev libglm-dev
+sudo apt -y install qt5-default qtmultimedia5-dev libqt5multimedia5-plugins libqt5gamepad5-dev \
+build-essential cmake libboost-all-dev libglm-dev
 ```
 
 Clone the repository and use the following compilation directives to compile the program
