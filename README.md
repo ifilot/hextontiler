@@ -1,7 +1,7 @@
 # Hextontiler
 
 ## Purpose
-Construction of hexagonal maps using Gravenguild's Hexton Tiles. The main idea is that you can design your game map before printing it, potentially saving on material and giving you a good impression of what your map would look like before assembling it in real-life.
+Construction of hexagonal maps using [Gravenguild's Hexton Tiles](https://www.gravenguild.com/). The main idea is that you can design your game map before printing it, potentially saving on material and giving you a good impression of what your map would look like before assembling it in real-life.
 
 ![](https://raw.githubusercontent.com/ifilot/hextontiler/master/gifs/sample_tile_insertion.gif)
 
