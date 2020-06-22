@@ -23,6 +23,7 @@
 
 #include <QString>
 
+#include <functional>
 #include <vector>
 #include <map>
 
