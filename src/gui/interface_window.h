@@ -121,6 +121,14 @@ private slots:
     void action_center_map();
 
     /**
+     * @brief      Toggle display of colors
+     */
+    inline void action_toggle_colors() {
+        this->scene->tile_colors = !this->scene->tile_colors;
+        this->anaglyph_widget->update();
+    }
+
+    /**
      * @brief      Build bill of materials
      */
     void action_build_bom();

@@ -65,14 +65,24 @@ void MapRenderer::draw() {
     for(const auto& tile : this->map->get_tiles()) {
         model.setToIdentity();
         auto tilepos = QVector3D(tile.second.x, tile.second.y, tile.second.z);
-        model.translate(this->scene->hexcube_to_cartesian(tilepos));
+        model.translate(this->scene->hexcube_to_cartesian(tilepos) + this->scene->get_tile_offset(this->scene->tiledist));
         mvp = this->scene->projection * this->scene->view * model;
+        mvp.scale(QVector3D(this->scene->tiledist, this->scene->tiledist, 1.0f));
         model_shader->set_uniform("mvp", mvp);
 
-        QVector3D color = this->tile_manager->get_color(tile.second.tile_id);
-        if(tilehighlight == tilepos && !this->scene->flag_dragging) {
-            color = 0.5 * color + 0.25 * QVector3D(1.0f, 1.0f, 1.0f);
-            highlight = true;
+        QVector3D color;
+        if(this->scene->tile_colors) {
+            color = this->tile_manager->get_color(tile.second.tile_id);
+            if(tilehighlight == tilepos && !this->scene->flag_dragging) {
+                color = 0.50 * color + 0.25 * QVector3D(1.0f, 1.0f, 1.0f);
+                highlight = true;
+            }
+        } else {
+            color = QVector3D(1.0f, 1.0f, 1.0f);
+            if(tilehighlight == tilepos && !this->scene->flag_dragging) {
+                color = 0.75 * color + 0.75 * QVector3D(1.0f, 1.0f, 1.0f);
+                highlight = true;
+            }
         }
 
         model_shader->set_uniform("color", color);
@@ -87,11 +97,12 @@ void MapRenderer::draw() {
 
     if(!highlight && QVector3D::dotProduct(QVector3D(1.0, 1.0, 1.0), tilehighlight) == 0 && !this->scene->flag_dragging) {
         model.setToIdentity();
-        model.translate(this->scene->hexcube_to_cartesian(tilehighlight));
+        model.translate(this->scene->hexcube_to_cartesian(tilehighlight) + this->scene->get_tile_offset(this->scene->tiledist));
         mvp = this->scene->projection * this->scene->view * model;
+        mvp.scale(QVector3D(this->scene->tiledist, this->scene->tiledist, 1.0f));
         model_shader->set_uniform("mvp", mvp);
 
-        QVector3D color = QVector3D(0.150, 0.150, 0.150);
+        QVector3D color = QVector3D(0.05, 0.05, 0.05);
         model_shader->set_uniform("color", color);
 
         QVector4D uv = this->tile_manager->get_uv(this->tile_manager->get_tile_id("ST00_000"));
@@ -103,7 +114,7 @@ void MapRenderer::draw() {
     }
 
     this->vao.release();
-
+    this->tilespackage->release();
     model_shader->release();
 }
 
@@ -133,8 +144,9 @@ void MapRenderer::draw_template_map() {
             model.setToIdentity();
             int z = -(x + y);
             QVector3D tilepos(x,y,z);
-            model.translate(this->scene->hexcube_to_cartesian(tilepos));
+            model.translate(this->scene->hexcube_to_cartesian(tilepos) + this->scene->get_tile_offset(this->scene->tiledist));
             mvp = this->scene->projection * this->scene->view * model;
+            mvp.scale(QVector3D(this->scene->tiledist, this->scene->tiledist, 1.0f));
             model_shader->set_uniform("mvp", mvp);
 
             QVector3D color = QVector3D(0.058, 0.065, 0.070);
@@ -150,7 +162,50 @@ void MapRenderer::draw_template_map() {
     }
 
     this->vao.release();
+    this->tilespackage->release();
+    model_shader->release();
+}
 
+/**
+ * @brief      Draw in debug mode
+ */
+void MapRenderer::draw_debug() {
+    ShaderProgram *model_shader = this->shader_manager->get_shader_program("line_shader");
+    model_shader->bind();
+
+    QMatrix4x4 model;
+    model.setToIdentity();
+    QMatrix4x4 mvp = this->scene->projection * this->scene->view * model;
+
+    QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
+
+    // draw tile
+    this->vao.bind();
+
+    QVector3D red(1.0, 0.0, 0.0);
+    QVector3D green(0.0, 1.0, 0.0);
+
+    for(const auto& tile : this->map->get_tiles()) {
+        model.setToIdentity();
+        auto tilepos = QVector3D(tile.second.x, tile.second.y, tile.second.z);
+        model.translate(this->scene->hexcube_to_cartesian(tilepos));
+        mvp = this->scene->projection * this->scene->view * model;
+        mvp.scale(QVector3D(0.1, 0.1, 0.1));
+        model_shader->set_uniform("mvp", mvp);
+        model_shader->set_uniform("color", green);
+        f->glDrawElements(GL_LINE_LOOP, 6, GL_UNSIGNED_INT, 0);     // draw tile center
+
+        model.setToIdentity();
+        tilepos = QVector3D(tile.second.x, tile.second.y, tile.second.z);
+        model.translate(this->scene->hexcube_to_cartesian(tilepos) + this->scene->get_tile_offset(this->scene->tiledist));
+        mvp = this->scene->projection * this->scene->view * model;
+        mvp.scale(QVector3D(0.1, 0.1, 0.1));
+        model_shader->set_uniform("mvp", mvp);
+        model_shader->set_uniform("color", red);
+        f->glDrawElements(GL_LINE_LOOP, 6, GL_UNSIGNED_INT, 0);     // draw sprite center
+    }
+
+    this->vao.release();
     model_shader->release();
 }
 

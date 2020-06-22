@@ -71,6 +71,11 @@ public:
     void draw_template_map();
 
     /**
+     * @brief      Draw in debug mode
+     */
+    void draw_debug();
+
+    /**
      * @brief      Sets the map.
      *
      * @param[in]  _map  The map

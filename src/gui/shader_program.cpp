@@ -57,9 +57,8 @@ void ShaderProgram::add_attributes() {
             this->m_program->bindAttributeLocation("position", 0);
             this->m_program->bindAttributeLocation("normal", 1);
         break;
-        case ShaderProgramType::AxesShader:
+        case ShaderProgramType::LineShader:
             this->m_program->bindAttributeLocation("position", 0);
-            this->m_program->bindAttributeLocation("normal", 1);
         break;
         case ShaderProgramType::SpriteShader:
             this->m_program->bindAttributeLocation("position", 0);
@@ -90,10 +89,8 @@ void ShaderProgram::add_uniforms() {
         return;
     }
 
-    if (this->type == ShaderProgramType::AxesShader) {
+    if (this->type == ShaderProgramType::LineShader) {
         this->uniforms.emplace("mvp", this->m_program->uniformLocation("mvp"));
-        this->uniforms.emplace("model", this->m_program->uniformLocation("model"));
-        this->uniforms.emplace("view", this->m_program->uniformLocation("view"));
         this->uniforms.emplace("color", this->m_program->uniformLocation("color"));
         return;
     }

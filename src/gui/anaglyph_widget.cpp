@@ -108,6 +108,7 @@ void AnaglyphWidget::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_BLEND);
     glEnable(GL_MULTISAMPLE);
+    glEnable(GL_DEPTH_TEST);
     glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
     glBlendEquation(GL_FUNC_ADD);
     glViewport(0, 0, this->width() * this->aa, this->height() * this->aa);
@@ -121,6 +122,8 @@ void AnaglyphWidget::paintGL() {
     const QMatrix4x4 target = QOpenGLTextureBlitter::targetTransform(targetRect, QRect(QPoint(0, 0), this->fbo->size()));
     blitter.blit(this->fbo->texture(), target, QOpenGLTextureBlitter::OriginBottomLeft);
     blitter.release();
+
+    // this->map_renderer->draw_debug();
 }
 
 /**
@@ -222,6 +225,7 @@ void AnaglyphWidget::load_shaders() {
     // create regular shaders
     shader_manager->create_shader_program("sprite_shader", ShaderProgramType::SpriteShader, ":/assets/shaders/sprite.vs", ":/assets/shaders/sprite.fs");
     shader_manager->create_shader_program("background_shader", ShaderProgramType::SpriteShader, ":/assets/shaders/background.vs", ":/assets/shaders/background.fs");
+    shader_manager->create_shader_program("line_shader", ShaderProgramType::SpriteShader, ":/assets/shaders/line.vs", ":/assets/shaders/line.fs");
 }
 
 /**

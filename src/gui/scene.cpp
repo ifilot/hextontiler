@@ -26,7 +26,7 @@ Scene::Scene() {
     this->camera_look_at = QVector3D(0.0f, 0.0f, 0.0f);
     this->update_view();
 
-    this->build_transformation_matrices(0.9);
+    this->build_transformation_matrices();
 }
 
 /**
@@ -95,6 +95,18 @@ QVector3D Scene::hexcube_to_cartesian(const QVector3D& hexcoord) const {
 }
 
 /**
+ * @brief      Convert hexcube coordinates to Cartesian tilecenter
+ *
+ * @param[in]  scale  Tile scale
+ *
+ * @return     The 3D vector.
+ */
+QVector3D Scene::get_tile_offset(float scale) const {
+    static const float offset = 0.5f * (1.0 - std::cos(qDegreesToRadians(this->blender_projection_angle)));
+    return QVector3D(0.0f, offset * scale, 0.0f);
+}
+
+/**
  * @brief      Convert Cartesian coordinates to hexcube coordinates
  *
  * @param[in]  hexcoord  The hexcoord
@@ -153,43 +165,18 @@ void Scene::update_view() {
  *
  * @param[in]  dist  The distance
  */
-void Scene::build_transformation_matrices(float dist) {
+void Scene::build_transformation_matrices() {
     // hexcoord to cartesian
     // cubic coordinates to cartesian
-    const QMatrix4x4 basetransform1(
-        1.00, -0.25, -0.25, 0.00,
-        0.00, -0.50,  0.50, 0.00,
-        0.00,  0.00,  0.00, 0.00,
-        0.00,  0.00,  0.00, 1.00
+    static const float t = std::sqrt(3.0f) / (2.0 * std::sqrt(2.0));
+    const QMatrix4x4 basetransform(
+        1.50,  0.75,     0.75,   0.00,
+        0.00,  0.50*t,  -0.50*t, 0.00,
+        1.00,  1.00,     1.00,   0.00,  // note that this line will always give 0 for z :-)
+        0.00,  0.00,     0.00,   1.00
     );
 
-    // some scaling
-    static const QMatrix4x4 scale1(
-        1.0/std::sqrt(2.0) * dist,  0.00,  0.00, 0.00,
-        0.00, -dist*.75,  0.00, 0.00,
-        0.00,  0.00,  1.00, 0.00,
-        0.00,  0.00,  0.00, 1.00
-    );
-
-    // fixed transformation matrix
-    this->hex2cart = scale1 * basetransform1;
-
-    // cubic coordinates to cartesian
-    float xx = 1.0/std::sqrt(2.0) * dist;
-    float yy = dist / .75;
-    const QMatrix4x4 basetransform2(
-        1.00*xx,  0.00,  0.00, 0.00,
-       -0.25*xx,  0.50*yy*xx,  0.00, 0.00,
-       -0.25*xx, -0.50*yy*xx,  0.00, 0.00,
-        0.00,  0.00,  0.00, 1.00
-    );
-
-    // some scaling
-    const QMatrix4x4 scale2(
-        2.0,  0.00,  0.00, 0.00,
-        0.00,  4.0,  0.00, 0.00,
-        0.00,  0.00,  4.00, 0.00,
-        0.00,  0.00,  0.00, 1.00
-    );
-    this->cart2hex = scale2 * basetransform2;
+    // fix coordinate transformations
+    this->hex2cart = basetransform;
+    this->cart2hex = basetransform.inverted();
 }

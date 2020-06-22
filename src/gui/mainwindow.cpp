@@ -44,6 +44,7 @@ MainWindow::MainWindow() {
 
     // actions for view menu
     QAction *action_center_map = new QAction(menu_view);
+    QAction *action_toggle_colors = new QAction(menu_view);
 
     // actions for tools menu
     QAction *action_construct_bom = new QAction(menu_tools);
@@ -66,6 +67,9 @@ MainWindow::MainWindow() {
     action_center_map->setText(tr("Center map"));
     action_center_map->setShortcut(Qt::Key_0);
     action_center_map->setIcon(QIcon(":/assets/icons/center.png"));
+    action_toggle_colors->setText(tr("Toggle colors"));
+    action_toggle_colors->setShortcut(Qt::Key_F1);
+    action_toggle_colors->setIcon(QIcon(":/assets/icons/light_bulb.png"));
 
     // create actions for tools menu
     action_construct_bom->setText(tr("Construct Bill of Materials"));
@@ -84,6 +88,7 @@ MainWindow::MainWindow() {
 
     // add actions to view menu
     menu_view->addAction(action_center_map);
+    menu_view->addAction(action_toggle_colors);
 
     // add actions to tools menu
     menu_tools->addAction(action_construct_bom);
@@ -98,6 +103,7 @@ MainWindow::MainWindow() {
 
     // connect actions view menu
     connect(action_center_map, SIGNAL(triggered()), this->interface_window, SLOT(action_center_map()));
+    connect(action_toggle_colors, SIGNAL(triggered()), this->interface_window, SLOT(action_toggle_colors()));
 
     // connect actions tools menu
     connect(action_construct_bom, SIGNAL(triggered()), this->interface_window, SLOT(action_build_bom()));

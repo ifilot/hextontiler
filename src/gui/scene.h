@@ -23,6 +23,7 @@
 
 #include <cmath>
 #include <QMatrix4x4>
+#include <QtMath>
 
 /**
  * @brief      This class describes a camera alignment.
@@ -37,9 +38,11 @@ public:
     QVector3D camera_position;
     QVector3D camera_look_at;
 
+    static constexpr float blender_projection_angle = 45.0f;
+    static constexpr float tiledist = 0.92;
+
     int canvas_width;
     int canvas_height;
-    float tiledist = 0.9;
 
     // transformation matrices
     QMatrix4x4 hex2cart;
@@ -48,6 +51,7 @@ public:
     QVector3D tile_highlight; // which tile to highlight
 
     bool flag_dragging = false;
+    bool tile_colors = true;
 
     Scene();
 
@@ -84,6 +88,15 @@ public:
      * @return     The 3D vector.
      */
     QVector3D hexcube_to_cartesian(const QVector3D& hexcoord) const;
+
+    /**
+     * @brief      Convert hexcube coordinates to Cartesian tilecenter
+     *
+     * @param[in]  scale  Tile scale
+     *
+     * @return     The 3D vector.
+     */
+    QVector3D get_tile_offset(float scale) const;
 
     /**
      * @brief      Convert Cartesian coordinates to hexcube coordinates
@@ -134,10 +147,8 @@ public:
 private:
     /**
      * @brief      Builds transformation matrices.
-     *
-     * @param[in]  dist  The distance
      */
-    void build_transformation_matrices(float dist);
+    void build_transformation_matrices();
 
 signals:
     /**

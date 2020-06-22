@@ -159,7 +159,7 @@ void TileSelector::select_new_tile() {
 
     // set pixmap color
     auto color = this->get_tile_color(tilename.substr(0,2)) * 200;
-    this->label_selection_image->setStyleSheet(tr("background-color: rgb(%1,%2,%3); border-radius: 10px; padding-bottom: 32px; margin-left: 64px; margin-right: 64px;").arg(color[0]).arg(color[1]).arg(color[2]));
+    this->label_selection_image->setStyleSheet(tr("background-color: rgb(%1,%2,%3); border-radius: 10px; padding: 5px;").arg(color[0]).arg(color[1]).arg(color[2]));
 
     emit(signal_tile_selected(but->text()));
 }
