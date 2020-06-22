@@ -28,9 +28,21 @@
 
 #include "tile.h"
 
+// custom comparison function
+typedef std::pair<int, int> AxialCoordinate;
+struct ComparisonAxialCoordinate {
+    bool operator()(const AxialCoordinate& a, const AxialCoordinate& b) const {
+        if(a.second == b.second) {
+            return a.first > b.first;
+        } else {
+            return a.second > b.second;
+        }
+    }
+};
+
 class Map {
 private:
-    std::map<std::pair<int, int>, Tile, std::greater<std::pair<int, int>>> tiles;
+    std::map<AxialCoordinate, Tile, ComparisonAxialCoordinate> tiles;
 
 public:
     /**
