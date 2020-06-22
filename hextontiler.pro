@@ -57,6 +57,6 @@ win32 {
 
 RESOURCES += \
     resources.qrc \
-    assets/tiles/tiles \
-    assets/tiles/icons \
+    assets/tiles/tiles_isometric \
+    assets/tiles/icons_isometric \
     assets/icons

@@ -37,7 +37,7 @@ MapRenderer::MapRenderer(const std::shared_ptr<ShaderProgramManager>& _shader_ma
     tile_manager(_tile_manager) {
     this->build_vao();
 
-    this->tilespackage = new QOpenGLTexture(QImage(QString(":/assets/tiles/tilespackage.png")));
+    this->tilespackage = new QOpenGLTexture(QImage(QString(":/assets/tiles/tilespackage_isometric.png")));
 }
 
 /**

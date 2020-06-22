@@ -24,21 +24,13 @@
 #include <QString>
 
 #include <vector>
-#include <unordered_map>
+#include <map>
 
 #include "tile.h"
 
-struct pairhash {
-public:
-  	template <typename T, typename U>
-	std::size_t operator()(const std::pair<T, U> &x) const {
-		return std::hash<T>()(x.first) ^ std::hash<U>()(x.second);
-	}
-};
-
 class Map {
 private:
-    std::unordered_map<std::pair<int, int>, Tile, pairhash> tiles;
+    std::map<std::pair<int, int>, Tile, std::greater<std::pair<int, int>>> tiles;
 
 public:
     /**

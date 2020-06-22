@@ -166,7 +166,7 @@ void Scene::build_transformation_matrices(float dist) {
     // some scaling
     static const QMatrix4x4 scale1(
         1.0/std::sqrt(2.0) * dist,  0.00,  0.00, 0.00,
-        0.00, -dist,  0.00, 0.00,
+        0.00, -dist*.75,  0.00, 0.00,
         0.00,  0.00,  1.00, 0.00,
         0.00,  0.00,  0.00, 1.00
     );
@@ -176,7 +176,7 @@ void Scene::build_transformation_matrices(float dist) {
 
     // cubic coordinates to cartesian
     float xx = 1.0/std::sqrt(2.0) * dist;
-    float yy = dist;
+    float yy = dist / .75;
     const QMatrix4x4 basetransform2(
         1.00*xx,  0.00,  0.00, 0.00,
        -0.25*xx,  0.50*yy*xx,  0.00, 0.00,
