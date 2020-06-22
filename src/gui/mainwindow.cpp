@@ -160,6 +160,7 @@ void MainWindow::exit() {
     msgBox.setInformativeText("Are you sure you want to quit?");
     msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
     msgBox.setDefaultButton(QMessageBox::Cancel);
+    msgBox.setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
     int ret = msgBox.exec();
 
     switch (ret) {
@@ -206,6 +207,7 @@ void MainWindow::about() {
     message_box.setWindowTitle("About Hextontiler");
     message_box.setWindowIcon(QIcon(":/assets/icons/hextontiler_logo_256.png"));
     message_box.setIconPixmap(QPixmap(":/assets/icons/hextontiler_logo_256.png"));
+    message_box.setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
     message_box.exec();
 }
 
