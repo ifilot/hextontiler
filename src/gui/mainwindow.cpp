@@ -186,7 +186,7 @@ void MainWindow::exit() {
  */
 void MainWindow::about() {
     QMessageBox message_box;
-    message_box.setStyleSheet("font-weight: normal;");
+    message_box.setStyleSheet("QPushButton{width: 600px;}");
     message_box.setText(PROGRAM_NAME
                         " "
                         PROGRAM_VERSION
@@ -211,9 +211,11 @@ void MainWindow::about() {
                         );
     message_box.setIcon(QMessageBox::Information);
     message_box.setWindowTitle("About Hextontiler");
-    message_box.setWindowIcon(QIcon(":/assets/icons/hextontiler_logo_256.png"));
-    message_box.setIconPixmap(QPixmap(":/assets/icons/hextontiler_logo_256.png"));
+    auto icon = QIcon(":/assets/icons/hextontiler_logo_256.png");
+    message_box.setWindowIcon((icon));
+    message_box.setIconPixmap(icon.pixmap(QSize(128,128)));
     message_box.setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+    message_box.setGeometry(geometry().x(), geometry().y(), 800, 800);
     message_box.exec();
 }
 
