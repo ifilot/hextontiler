@@ -21,5 +21,58 @@
 
 #pragma once
 
-#define PROGRAM_NAME "Hextontiler"
-#define PROGRAM_VERSION "0.2.1.0"
+#include <QWidget>
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QGridLayout>
+#include <QCheckBox>
+#include <QDialog>
+#include <QVector>
+#include <QPlainTextEdit>
+
+#include "../data/map.h"
+
+class BomWidget : public QDialog {
+    Q_OBJECT
+
+private:
+    QPlainTextEdit *text_edit;
+
+public:
+    /**
+     * @brief      Constructs a new instance.
+     *
+     * @param      parent  The parent
+     */
+    BomWidget(QWidget *parent = 0);
+
+    /**
+     * @brief      Sets the text.
+     *
+     * @param[in]  text  The text
+     */
+    inline void set_text(const QString& text) {
+        this->text_edit->setPlainText(text);
+    }
+
+    /**
+     * @brief      Destroys the object.
+     */
+    ~BomWidget();
+
+private:
+
+public slots:
+
+private slots:
+    /**
+     * @brief      Confirm
+     */
+    void action_copy_to_clipboard();
+
+    /**
+     * @brief      Confirm
+     */
+    void confirm();
+};

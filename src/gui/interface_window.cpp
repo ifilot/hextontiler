@@ -129,15 +129,9 @@ void InterfaceWindow::action_center_map() {
  * @brief      Build bill of materials
  */
 void InterfaceWindow::action_build_bom() {
-    QString bom = this->map_io->build_bom(this->map);
-    QMessageBox message_box;
-    message_box.setStyleSheet("QLabel{min-width: 250px; font-weight: normal;}");
-    message_box.setText(bom);
-    message_box.setIcon(QMessageBox::Information);
-    message_box.setWindowTitle("Bill of Materials");
-    message_box.setWindowIcon(QIcon(":/assets/icons/managlyph_256.ico"));
-    message_box.setIconPixmap(QPixmap(":/assets/icons/managlyph_256.ico"));
-    message_box.exec();
+    BomWidget bomwidget(this);
+    bomwidget.set_text(this->map_io->build_bom(this->map));
+    bomwidget.exec();
 }
 
 /**

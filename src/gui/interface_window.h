@@ -42,6 +42,7 @@
 #include "tile_selector.h"
 #include "mainwindow.h"
 #include "user_action.h"
+#include "bom_widget.h"
 #include "../data/map_io.h"
 
 QT_BEGIN_NAMESPACE

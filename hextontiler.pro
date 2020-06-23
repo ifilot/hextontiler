@@ -12,6 +12,7 @@ HEADERS       = src/data/map.h \
                 src/data/tile.h \
                 src/data/tile_manager.h \
                 src/gui/anaglyph_widget.h \
+                src/gui/bom_widget.h \
                 src/gui/interface_window.h \
                 src/gui/mainwindow.h \
                 src/gui/shader_program_types.h \
@@ -29,6 +30,7 @@ SOURCES       = src/main.cpp \
                 src/data/tile.cpp \
                 src/data/tile_manager.cpp \
                 src/gui/anaglyph_widget.cpp \
+                src/gui/bom_widget.cpp \
                 src/gui/interface_window.cpp \
                 src/gui/mainwindow.cpp \
                 src/gui/shader_program.cpp \
