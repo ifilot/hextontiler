@@ -23,21 +23,26 @@
 
 #include <cmath>
 #include <QMatrix4x4>
+#include <QtMath>
 
 /**
  * @brief      This class describes a camera alignment.
  */
 
-class Scene {
+class Scene : public QObject {
+    Q_OBJECT
+
 public:
     QMatrix4x4 projection;
     QMatrix4x4 view;
     QVector3D camera_position;
     QVector3D camera_look_at;
 
+    static constexpr float blender_projection_angle = 45.0f;
+    static constexpr float tiledist = 0.92;
+
     int canvas_width;
     int canvas_height;
-    float tiledist = 0.9;
 
     // transformation matrices
     QMatrix4x4 hex2cart;
@@ -46,6 +51,7 @@ public:
     QVector3D tile_highlight; // which tile to highlight
 
     bool flag_dragging = false;
+    bool tile_colors = true;
 
     Scene();
 
@@ -57,7 +63,7 @@ public:
      * @param       pointer to vector holding ray direction
      * @return      void
      */
-    void calculate_ray(const QPoint& mouse_position, QVector3D* ray_origin, QVector3D* ray_direction);
+    void calculate_ray(const QPoint& mouse_position, QVector3D* ray_origin, QVector3D* ray_direction) const;
 
     /**
      * @brief      Calculates the point of intersection of a ray with a plane
@@ -72,7 +78,7 @@ public:
     QVector3D calculate_ray_plane_intersection(const QVector3D& ray_origin,
                                                const QVector3D& ray_vector,
                                                const QVector3D& plane_origin,
-                                               const QVector3D& plane_normal);
+                                               const QVector3D& plane_normal) const;
 
     /**
      * @brief      Convert hexcube coordinates to Cartesian
@@ -82,6 +88,15 @@ public:
      * @return     The 3D vector.
      */
     QVector3D hexcube_to_cartesian(const QVector3D& hexcoord) const;
+
+    /**
+     * @brief      Convert hexcube coordinates to Cartesian tilecenter
+     *
+     * @param[in]  scale  Tile scale
+     *
+     * @return     The 3D vector.
+     */
+    QVector3D get_tile_offset(float scale) const;
 
     /**
      * @brief      Convert Cartesian coordinates to hexcube coordinates
@@ -107,6 +122,15 @@ public:
     }
 
     /**
+     * @brief      Gets the hexpos given mouse position.
+     *
+     * @param[in]  mouse_position  The mouse position
+     *
+     * @return     The hexpos at mouse position.
+     */
+    QVector3D get_hexpos_at_mousepos(const QPoint& mouse_position) const;
+
+    /**
      * @brief      Update view matrix
      */
     void update_view();
@@ -123,8 +147,13 @@ public:
 private:
     /**
      * @brief      Builds transformation matrices.
-     *
-     * @param[in]  dist  The distance
      */
-    void build_transformation_matrices(float dist);
+    void build_transformation_matrices();
+
+signals:
+    /**
+     * @brief      Signal to update the screen
+     */
+    void signal_update_screen();
+
 };

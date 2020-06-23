@@ -23,22 +23,27 @@
 
 #include <QString>
 
+#include <functional>
 #include <vector>
-#include <unordered_map>
+#include <map>
 
 #include "tile.h"
 
-struct pairhash {
-public:
-  	template <typename T, typename U>
-	std::size_t operator()(const std::pair<T, U> &x) const {
-		return std::hash<T>()(x.first) ^ std::hash<U>()(x.second);
-	}
+// custom comparison function
+typedef std::pair<int, int> AxialCoordinate;
+struct ComparisonAxialCoordinate {
+    bool operator()(const AxialCoordinate& a, const AxialCoordinate& b) const {
+        if(a.second == b.second) {
+            return a.first > b.first;
+        } else {
+            return a.second > b.second;
+        }
+    }
 };
 
 class Map {
 private:
-    std::unordered_map<std::pair<int, int>, Tile, pairhash> tiles;
+    std::map<AxialCoordinate, Tile, ComparisonAxialCoordinate> tiles;
 
 public:
     /**

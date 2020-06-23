@@ -46,6 +46,7 @@
 #include <boost/format.hpp>
 #include <math.h>
 #include <string>
+#include <algorithm>
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
@@ -104,6 +105,9 @@ public:
     }
 
 public slots:
+    /**
+     * @brief      Clean up this object
+     */
     void cleanup();
 
 protected:
@@ -165,6 +169,9 @@ private:
     void set_projection_matrix();
 
 private slots:
+    /**
+     * @brief      Action to perform when a frame is swapped
+     */
     void action_frame_swapped();
 
 signals:

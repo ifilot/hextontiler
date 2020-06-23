@@ -22,4 +22,4 @@
 #pragma once
 
 #define PROGRAM_NAME "Hextontiler"
-#define PROGRAM_VERSION "0.1.0.0"
+#define PROGRAM_VERSION "0.2.0.0"

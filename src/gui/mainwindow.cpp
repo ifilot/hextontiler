@@ -44,6 +44,7 @@ MainWindow::MainWindow() {
 
     // actions for view menu
     QAction *action_center_map = new QAction(menu_view);
+    QAction *action_toggle_colors = new QAction(menu_view);
 
     // actions for tools menu
     QAction *action_construct_bom = new QAction(menu_tools);
@@ -65,12 +66,19 @@ MainWindow::MainWindow() {
     // create actions for view menu
     action_center_map->setText(tr("Center map"));
     action_center_map->setShortcut(Qt::Key_0);
+    action_center_map->setIcon(QIcon(":/assets/icons/center.png"));
+    action_toggle_colors->setText(tr("Toggle colors"));
+    action_toggle_colors->setShortcut(Qt::Key_F1);
+    action_toggle_colors->setIcon(QIcon(":/assets/icons/light_bulb.png"));
 
     // create actions for tools menu
     action_construct_bom->setText(tr("Construct Bill of Materials"));
+    action_construct_bom->setShortcut(Qt::CTRL + Qt::Key_B);
+    action_construct_bom->setIcon(QIcon(":/assets/icons/list.png"));
 
     // create actions for about menu
     action_about->setText(tr("About"));
+    action_about->setShortcut(Qt::CTRL + Qt::Key_Question);
     action_about->setIcon(QIcon(":/assets/icons/info.png"));
 
     // add actions to file menu
@@ -80,6 +88,7 @@ MainWindow::MainWindow() {
 
     // add actions to view menu
     menu_view->addAction(action_center_map);
+    menu_view->addAction(action_toggle_colors);
 
     // add actions to tools menu
     menu_tools->addAction(action_construct_bom);
@@ -94,6 +103,7 @@ MainWindow::MainWindow() {
 
     // connect actions view menu
     connect(action_center_map, SIGNAL(triggered()), this->interface_window, SLOT(action_center_map()));
+    connect(action_toggle_colors, SIGNAL(triggered()), this->interface_window, SLOT(action_toggle_colors()));
 
     // connect actions tools menu
     connect(action_construct_bom, SIGNAL(triggered()), this->interface_window, SLOT(action_build_bom()));
@@ -115,7 +125,7 @@ MainWindow::MainWindow() {
  * @brief      Open a new object file
  */
 void MainWindow::open() {
-    QString filename = QFileDialog::getOpenFileName(this, tr("Open file"), "", tr("Hexon tile map (*.htm);;"));
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open file"), "", tr("Hexton tile map (*.htm);;"));
 
     if(filename.isEmpty()) {
         return;
@@ -156,6 +166,7 @@ void MainWindow::exit() {
     msgBox.setInformativeText("Are you sure you want to quit?");
     msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
     msgBox.setDefaultButton(QMessageBox::Cancel);
+    msgBox.setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
     int ret = msgBox.exec();
 
     switch (ret) {
@@ -175,7 +186,7 @@ void MainWindow::exit() {
  */
 void MainWindow::about() {
     QMessageBox message_box;
-    message_box.setStyleSheet("font-weight: normal;");
+    message_box.setStyleSheet("QPushButton{width: 600px;}");
     message_box.setText(PROGRAM_NAME
                         " "
                         PROGRAM_VERSION
@@ -200,8 +211,11 @@ void MainWindow::about() {
                         );
     message_box.setIcon(QMessageBox::Information);
     message_box.setWindowTitle("About Hextontiler");
-    message_box.setWindowIcon(QIcon(":/assets/icons/hextontiler_logo_256.png"));
-    message_box.setIconPixmap(QPixmap(":/assets/icons/hextontiler_logo_256.png"));
+    auto icon = QIcon(":/assets/icons/hextontiler_logo_256.png");
+    message_box.setWindowIcon((icon));
+    message_box.setIconPixmap(icon.pixmap(QSize(128,128)));
+    message_box.setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+    message_box.setGeometry(geometry().x(), geometry().y(), 800, 800);
     message_box.exec();
 }
 

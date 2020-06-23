@@ -121,7 +121,7 @@ void TileSelector::populate_tile_list() {
 
         this->buttons.push_back(new QPushButton(tilename.c_str()));
         this->layout->addWidget(this->buttons.back(), rownr, colnr);
-        QString path = tr(":/assets/tiles/icons/") + tr(tilename.c_str()) + tr("_000.png");
+        QString path = tr(":/assets/tiles/icons_isometric/") + tr(tilename.c_str()) + tr("_000.png");
         this->buttons.back()->setIcon(QIcon(path));
         this->buttons.back()->setIconSize(QSize(32, 32));
         this->buttons.back()->setStyleSheet(tr("background-color: rgb(%1,%2,%3); font-weight: bold; color: #CCC;").arg(color[0]).arg(color[1]).arg(color[2]));
@@ -153,13 +153,13 @@ void TileSelector::select_new_tile() {
     this->label_selection->setText(tr("<b>") + tr(got->second.c_str()) + tr("</b> Tile #") + tr(tile_id.c_str()));
 
     // set pixmap
-    QString path = tr(":/assets/tiles/tiles/") + but->text() + tr("_000.png");
+    QString path = tr(":/assets/tiles/tiles_isometric/") + but->text() + tr("_000.png");
     QPixmap pixmap(path);
     this->label_selection_image->setPixmap(pixmap);
 
     // set pixmap color
     auto color = this->get_tile_color(tilename.substr(0,2)) * 200;
-    this->label_selection_image->setStyleSheet(tr("background-color: rgb(%1,%2,%3); border-radius: 10px;").arg(color[0]).arg(color[1]).arg(color[2]));
+    this->label_selection_image->setStyleSheet(tr("background-color: rgb(%1,%2,%3); border-radius: 10px; padding: 5px;").arg(color[0]).arg(color[1]).arg(color[2]));
 
     emit(signal_tile_selected(but->text()));
 }

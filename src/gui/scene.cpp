@@ -26,7 +26,7 @@ Scene::Scene() {
     this->camera_look_at = QVector3D(0.0f, 0.0f, 0.0f);
     this->update_view();
 
-    this->build_transformation_matrices(0.9);
+    this->build_transformation_matrices();
 }
 
 /**
@@ -37,7 +37,7 @@ Scene::Scene() {
  * @param       pointer to vector holding ray direction
  * @return      void
  */
-void Scene::calculate_ray(const QPoint& mouse_position, QVector3D* ray_origin, QVector3D* ray_direction) {
+void Scene::calculate_ray(const QPoint& mouse_position, QVector3D* ray_origin, QVector3D* ray_direction) const {
     const float screen_width = (float)this->canvas_width;
     const float screen_height = (float)this->canvas_height;
 
@@ -71,7 +71,7 @@ void Scene::calculate_ray(const QPoint& mouse_position, QVector3D* ray_origin, Q
 QVector3D Scene::calculate_ray_plane_intersection(const QVector3D& ray_origin,
                                                   const QVector3D& ray_vector,
                                                   const QVector3D& plane_origin,
-                                                  const QVector3D& plane_normal) {
+                                                  const QVector3D& plane_normal) const {
 
     float dotprod = QVector3D::dotProduct(ray_vector, plane_normal);
 
@@ -95,6 +95,18 @@ QVector3D Scene::hexcube_to_cartesian(const QVector3D& hexcoord) const {
 }
 
 /**
+ * @brief      Convert hexcube coordinates to Cartesian tilecenter
+ *
+ * @param[in]  scale  Tile scale
+ *
+ * @return     The 3D vector.
+ */
+QVector3D Scene::get_tile_offset(float scale) const {
+    static const float offset = 0.5f * (1.0 - std::cos(qDegreesToRadians(this->blender_projection_angle)));
+    return QVector3D(0.0f, offset * scale, 0.0f);
+}
+
+/**
  * @brief      Convert Cartesian coordinates to hexcube coordinates
  *
  * @param[in]  hexcoord  The hexcoord
@@ -109,10 +121,35 @@ QVector3D Scene::cartesian_to_hexcube(const QVector3D& cartcoord) const {
  * @brief      Set mouse position in world space to determine which tile to highlight
  */
 void Scene::set_mouse_pos(const QVector3D& worldpos) {
-    this->tile_highlight = this->cartesian_to_hexcube(worldpos);
-    tile_highlight[0] = std::round(tile_highlight[0]);
-    tile_highlight[1] = std::round(tile_highlight[1]);
-    tile_highlight[2] = std::round(tile_highlight[2]);
+    auto new_tile_highlight = this->cartesian_to_hexcube(worldpos);
+    new_tile_highlight[0] = std::round(new_tile_highlight[0]);
+    new_tile_highlight[1] = std::round(new_tile_highlight[1]);
+    new_tile_highlight[2] = std::round(new_tile_highlight[2]);
+
+    if(new_tile_highlight != this->tile_highlight) {
+        this->tile_highlight = new_tile_highlight;
+        emit(signal_update_screen());
+    }
+}
+
+/**
+ * @brief      Gets the hexpos given mouse position.
+ *
+ * @param[in]  mouse_position  The mouse position
+ *
+ * @return     The hexpos at mouse position.
+ */
+QVector3D Scene::get_hexpos_at_mousepos(const QPoint& mouse_position) const {
+    QVector3D ray_origin, ray_direction;
+    this->calculate_ray(mouse_position, &ray_origin, &ray_direction);
+    auto worldpos = this->calculate_ray_plane_intersection(ray_origin, ray_direction, QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 0.0f, 1.0f));
+    worldpos += this->camera_look_at;
+    auto hexpos = this->cartesian_to_hexcube(worldpos);
+    hexpos[0] = std::round(hexpos[0]);
+    hexpos[1] = std::round(hexpos[1]);
+    hexpos[2] = std::round(hexpos[2]);
+
+    return hexpos;
 }
 
 /**
@@ -128,43 +165,18 @@ void Scene::update_view() {
  *
  * @param[in]  dist  The distance
  */
-void Scene::build_transformation_matrices(float dist) {
+void Scene::build_transformation_matrices() {
     // hexcoord to cartesian
     // cubic coordinates to cartesian
-    const QMatrix4x4 basetransform1(
-        1.00, -0.25, -0.25, 0.00,
-        0.00, -0.50,  0.50, 0.00,
-        0.00,  0.00,  0.00, 0.00,
-        0.00,  0.00,  0.00, 1.00
+    static const float t = std::sqrt(3.0f) / (2.0 * std::sqrt(2.0));
+    const QMatrix4x4 basetransform(
+        1.50,  0.75,     0.75,   0.00,
+        0.00,  0.50*t,  -0.50*t, 0.00,
+        1.00,  1.00,     1.00,   0.00,  // note that this line will always give 0 for z :-)
+        0.00,  0.00,     0.00,   1.00
     );
 
-    // some scaling
-    static const QMatrix4x4 scale1(
-        1.0/std::sqrt(2.0) * dist,  0.00,  0.00, 0.00,
-        0.00, -dist,  0.00, 0.00,
-        0.00,  0.00,  1.00, 0.00,
-        0.00,  0.00,  0.00, 1.00
-    );
-
-    // fixed transformation matrix
-    this->hex2cart = scale1 * basetransform1;
-
-    // cubic coordinates to cartesian
-    float xx = 1.0/std::sqrt(2.0) * dist;
-    float yy = dist;
-    const QMatrix4x4 basetransform2(
-        1.00*xx,  0.00,  0.00, 0.00,
-       -0.25*xx,  0.50*yy*xx,  0.00, 0.00,
-       -0.25*xx, -0.50*yy*xx,  0.00, 0.00,
-        0.00,  0.00,  0.00, 1.00
-    );
-
-    // some scaling
-    const QMatrix4x4 scale2(
-        2.0,  0.00,  0.00, 0.00,
-        0.00,  4.0,  0.00, 0.00,
-        0.00,  0.00,  4.00, 0.00,
-        0.00,  0.00,  0.00, 1.00
-    );
-    this->cart2hex = scale2 * basetransform2;
+    // fix coordinate transformations
+    this->hex2cart = basetransform;
+    this->cart2hex = basetransform.inverted();
 }

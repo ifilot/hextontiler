@@ -108,6 +108,7 @@ void AnaglyphWidget::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_BLEND);
     glEnable(GL_MULTISAMPLE);
+    glEnable(GL_DEPTH_TEST);
     glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
     glBlendEquation(GL_FUNC_ADD);
     glViewport(0, 0, this->width() * this->aa, this->height() * this->aa);
@@ -121,6 +122,8 @@ void AnaglyphWidget::paintGL() {
     const QMatrix4x4 target = QOpenGLTextureBlitter::targetTransform(targetRect, QRect(QPoint(0, 0), this->fbo->size()));
     blitter.blit(this->fbo->texture(), target, QOpenGLTextureBlitter::OriginBottomLeft);
     blitter.release();
+
+    // this->map_renderer->draw_debug();
 }
 
 /**
@@ -183,8 +186,6 @@ void AnaglyphWidget::mouseMoveEvent(QMouseEvent *event) {
     auto pos = this->scene->calculate_ray_plane_intersection(ray_origin, ray_direction, QVector3D(0.0, 0.0, 0.0), QVector3D(0.0, 0.0, 1.0));
     pos += this->scene->camera_look_at;
     this->scene->set_mouse_pos(pos);
-
-    this->update();
 }
 
 /**
@@ -194,9 +195,7 @@ void AnaglyphWidget::mouseMoveEvent(QMouseEvent *event) {
  */
 void AnaglyphWidget::wheelEvent(QWheelEvent *event) {
     this->scene->camera_position += event->delta() * 0.01f * QVector3D(0, 0, 1);
-    if(this->scene->camera_position[2] < 4.0) {
-        this->scene->camera_position[2] = 4.0;
-    }
+    this->scene->camera_position[2] = glm::clamp(this->scene->camera_position[2], 4.0f, 40.0f);
 
     float w = (float)this->scene->canvas_width;
     float h = (float)this->scene->canvas_height;
@@ -225,6 +224,8 @@ void AnaglyphWidget::window_move_event() {
 void AnaglyphWidget::load_shaders() {
     // create regular shaders
     shader_manager->create_shader_program("sprite_shader", ShaderProgramType::SpriteShader, ":/assets/shaders/sprite.vs", ":/assets/shaders/sprite.fs");
+    shader_manager->create_shader_program("background_shader", ShaderProgramType::SpriteShader, ":/assets/shaders/background.vs", ":/assets/shaders/background.fs");
+    shader_manager->create_shader_program("line_shader", ShaderProgramType::SpriteShader, ":/assets/shaders/line.vs", ":/assets/shaders/line.fs");
 }
 
 /**

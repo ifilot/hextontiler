@@ -59,6 +59,7 @@ InterfaceWindow::InterfaceWindow(MainWindow *mw)
 
     connect(this->anaglyph_widget, SIGNAL(opengl_ready()), this, SLOT(slot_opengl_ready()));
     connect(this->tile_selector, SIGNAL(signal_tile_selected(const QString&)), this->user_action.get(), SLOT(slot_new_tile(const QString&)));
+    connect(this->scene.get(), SIGNAL(signal_update_screen()), this->anaglyph_widget, SLOT(update()));
 }
 
 /**

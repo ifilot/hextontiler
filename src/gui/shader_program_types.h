@@ -27,7 +27,7 @@
 enum class ShaderProgramType {
     ModelShader,
     StereoscopicShader,
-    AxesShader,
+    LineShader,
     SpriteShader,
     CanvasShader
 };
