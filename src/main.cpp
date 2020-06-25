@@ -63,6 +63,8 @@ int main(int argc, char *argv[]) {
     } catch(const std::exception& e) {
         // if any errors are caught in the process of starting up the application,
         // they will be printed in the execution.log file
+        std::cerr << "Error detected!" << std::endl;
+        std::cerr << e.what() << std::endl;
         lf << "Error detected!" << std::endl;
         lf << e.what() << std::endl;
         auto texc = std::time(nullptr);

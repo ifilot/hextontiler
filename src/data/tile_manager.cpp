@@ -34,11 +34,15 @@ TileManager::TileManager() {
             float uvx2 = root.get<double>(iter->first + ".uvx2");
             float uvy1 = root.get<double>(iter->first + ".uvy1");
             float uvy2 = root.get<double>(iter->first + ".uvy2");
+            float sx = root.get<double>(iter->first + ".sx");
+            float sy = root.get<double>(iter->first + ".sy");
 
             QVector4D uv(uvx1, uvy1, uvx2, uvy2);
+            QVector3D scale(sx, sy, 1.0f);
             this->tile_ids.emplace(name, this->tilenames.size());
             this->tilenames.push_back(name);
             this->uvs.push_back(uv);
+            this->scales.push_back(scale);
             this->colors.push_back(this->get_color_from_tilecode(iter->first.substr(0,2)));
         }
 

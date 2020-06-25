@@ -37,7 +37,7 @@ MapRenderer::MapRenderer(const std::shared_ptr<ShaderProgramManager>& _shader_ma
     tile_manager(_tile_manager) {
     this->build_vao();
 
-    this->tilespackage = new QOpenGLTexture(QImage(QString(":/assets/tiles/tilespackage_isometric.png")));
+    this->tilespackage = new QOpenGLTexture(QImage(QString("../assets/tiles/tilespackage.png")));
 }
 
 /**
@@ -68,6 +68,7 @@ void MapRenderer::draw() {
         model.translate(this->scene->hexcube_to_cartesian(tilepos) + this->scene->get_tile_offset(this->scene->tiledist));
         mvp = this->scene->projection * this->scene->view * model;
         mvp.scale(QVector3D(this->scene->tiledist, this->scene->tiledist, 1.0f));
+        mvp.scale(this->tile_manager->get_scale(tile.second.tile_id));
         model_shader->set_uniform("mvp", mvp);
 
         QVector3D color;
@@ -97,9 +98,10 @@ void MapRenderer::draw() {
 
     if(!highlight && QVector3D::dotProduct(QVector3D(1.0, 1.0, 1.0), tilehighlight) == 0 && !this->scene->flag_dragging) {
         model.setToIdentity();
-        model.translate(this->scene->hexcube_to_cartesian(tilehighlight) + this->scene->get_tile_offset(this->scene->tiledist));
+        model.translate(this->scene->hexcube_to_cartesian(tilehighlight) + this->scene->get_tile_offset(this->scene->tiledist) - QVector3D(0.046875f, 0.0f, 1.0f));
         mvp = this->scene->projection * this->scene->view * model;
         mvp.scale(QVector3D(this->scene->tiledist, this->scene->tiledist, 1.0f));
+        mvp.scale(this->tile_manager->get_scale(this->tile_manager->get_tile_id("ST00_000")));
         model_shader->set_uniform("mvp", mvp);
 
         QVector3D color = QVector3D(0.05, 0.05, 0.05);
@@ -135,6 +137,8 @@ void MapRenderer::draw_template_map() {
 
     QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
 
+    QVector3D tilescale = this->tile_manager->get_scale(this->tile_manager->get_tile_id("ST00_000"));
+
     // draw tile
     this->vao.bind();
     this->tilespackage->bind();
@@ -144,9 +148,10 @@ void MapRenderer::draw_template_map() {
             model.setToIdentity();
             int z = -(x + y);
             QVector3D tilepos(x,y,z);
-            model.translate(this->scene->hexcube_to_cartesian(tilepos) + this->scene->get_tile_offset(this->scene->tiledist));
+            model.translate(this->scene->hexcube_to_cartesian(tilepos) + this->scene->get_tile_offset(this->scene->tiledist) - QVector3D(0.046875f, 0.0f, 1.0f));
             mvp = this->scene->projection * this->scene->view * model;
             mvp.scale(QVector3D(this->scene->tiledist, this->scene->tiledist, 1.0f));
+            mvp.scale(tilescale);
             model_shader->set_uniform("mvp", mvp);
 
             QVector3D color = QVector3D(0.058, 0.065, 0.070);

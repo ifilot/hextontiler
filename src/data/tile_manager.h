@@ -43,6 +43,7 @@ private:
     std::unordered_map<std::string, unsigned int> tile_ids;
     std::vector<std::string> tilenames;
     std::vector<QVector4D> uvs;
+    std::vector<QVector3D> scales;
     std::vector<QVector3D> colors;
 
 public:
@@ -50,6 +51,10 @@ public:
 
     inline const QVector4D& get_uv(unsigned int id) const {
         return this->uvs[id];
+    }
+
+    inline const QVector3D& get_scale(unsigned int id) const {
+        return this->scales[id];
     }
 
     inline const QVector3D& get_color(unsigned int id) const {

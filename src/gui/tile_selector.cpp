@@ -113,6 +113,9 @@ void TileSelector::populate_tile_list() {
         if(tilename.substr(0,2) != oldname) {
             rownr++;
             auto got = this->long_names.find(tilename.substr(0,2));
+            if(got == this->long_names.end()) {
+                throw std::runtime_error("Could not find: " + tilename + " in " + __FILE__);
+            }
             this->layout->addWidget(new QLabel(got->second.c_str()), rownr, 0);
             rownr++;
             colnr = 0;
