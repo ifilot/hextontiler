@@ -123,7 +123,7 @@ void AnaglyphWidget::paintGL() {
     blitter.blit(this->fbo->texture(), target, QOpenGLTextureBlitter::OriginBottomLeft);
     blitter.release();
 
-    // this->map_renderer->draw_debug();
+    this->map_renderer->draw_debug();
 }
 
 /**
