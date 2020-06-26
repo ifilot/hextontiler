@@ -64,7 +64,7 @@ void MapRenderer::draw() {
 
     for(const auto& tile : this->map->get_tiles()) {
         auto tilescale = this->tile_manager->get_scale(tile.second.tile_id);
-        float dist = (tilescale[1] * 512.0f - 156.0f) / 512.0f * 0.5 - 0.29;
+        float dist = (tilescale[1] * 512.0f - 156.0f) / 512.0f * 0.5 - 0.289;
 
         model.setToIdentity();
         auto tilepos = QVector3D(tile.second.x, tile.second.y, tile.second.z);
@@ -101,7 +101,7 @@ void MapRenderer::draw() {
 
     if(!highlight && QVector3D::dotProduct(QVector3D(1.0, 1.0, 1.0), tilehighlight) == 0 && !this->scene->flag_dragging) {
         auto tilescale = this->tile_manager->get_scale(this->tile_manager->get_tile_id("ST00_000"));
-        float dist = (tilescale[1] * 512.0f - 156.0f) / 512.0f * 0.5 - 0.29;
+        float dist = (tilescale[1] * 512.0f - 156.0f) / 512.0f * 0.5 - 0.289;
 
         model.setToIdentity();
         model.translate(this->scene->hexcube_to_cartesian(tilehighlight) + this->scene->get_tile_offset(this->scene->tiledist) + QVector3D(0.0f, dist, 1.0f));
@@ -144,7 +144,7 @@ void MapRenderer::draw_template_map() {
     QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
 
     auto tilescale = this->tile_manager->get_scale(this->tile_manager->get_tile_id("ST00_000"));
-    float dist = (tilescale[1] * 512.0f - 156.0f) / 512.0f * 0.5 - 0.29;
+    float dist = (tilescale[1] * 512.0f - 156.0f) / 512.0f * 0.5 - 0.289;
 
     // draw tile
     this->vao.bind();
@@ -199,7 +199,7 @@ void MapRenderer::draw_debug() {
 
     for(const auto& tile : this->map->get_tiles()) {
         auto tilescale = this->tile_manager->get_scale(this->tile_manager->get_tile_id("ST00_000"));
-        float dist = (tilescale[1] * 512.0f - 156.0f) / 512.0f * 0.5 - 0.29;
+        float dist = (tilescale[1] * 512.0f - 156.0f) / 512.0f * 0.5 - 0.289;
 
         model.setToIdentity();
         auto tilepos = QVector3D(tile.second.x, tile.second.y, tile.second.z);
