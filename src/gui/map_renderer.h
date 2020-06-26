@@ -48,6 +48,8 @@ private:
 
     std::shared_ptr<Map> map;
 
+    static constexpr float tile_offset = 0.289f;
+
 public:
     /**
      * @brief      Constructs a new instance.

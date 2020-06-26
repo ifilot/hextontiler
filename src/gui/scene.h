@@ -53,6 +53,9 @@ public:
     bool flag_dragging = false;
     bool tile_colors = true;
 
+    float contrast = 1.1f;
+    float brightness = 0.1f;
+
     Scene();
 
     /**
