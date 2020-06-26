@@ -64,7 +64,14 @@ public:
      *
      * @return     The bill of materials
      */
-    QString build_bom(const std::shared_ptr<Map>& map) const;
+    QString build_bom_string(const std::shared_ptr<Map>& map) const;
+
+    /**
+     * @brief      Build the bill of materials
+     *
+     * @return     The bill of materials
+     */
+    std::unordered_map<std::string, unsigned int> build_bom_map(const std::shared_ptr<Map>& map) const;
 
 private:
 };

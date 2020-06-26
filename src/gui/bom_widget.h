@@ -29,7 +29,17 @@
 #include <QCheckBox>
 #include <QDialog>
 #include <QVector>
+#include <QLabel>
 #include <QPlainTextEdit>
+#include <QTemporaryDir>
+#include <QDesktopServices>
+#include <QMessageBox>
+
+#include <boost/lexical_cast.hpp>
+#include <unordered_map>
+#include <boost/algorithm/string.hpp>
+
+#include <fstream>
 
 #include "../data/map.h"
 
@@ -38,6 +48,8 @@ class BomWidget : public QDialog {
 
 private:
     QPlainTextEdit *text_edit;
+    std::vector<std::unordered_map<std::string, unsigned int>> store_conversion_tables;
+    std::unordered_map<std::string, unsigned int> bom;
 
 public:
     /**
@@ -57,11 +69,28 @@ public:
     }
 
     /**
+     * @brief      Sets the map.
+     *
+     * @param[in]  _bom  The bom
+     */
+    inline void set_map(const std::unordered_map<std::string, unsigned int> _bom) {
+        this->bom = _bom;
+    }
+
+    /**
      * @brief      Destroys the object.
      */
     ~BomWidget();
 
 private:
+    /**
+     * @brief      Reads a store conversion table from a file
+     *
+     * @param[in]  filename  The filename
+     *
+     * @return     Return map
+     */
+    std::unordered_map<std::string, unsigned int> read_conversion_table(const QString& filename);
 
 public slots:
 
@@ -75,4 +104,9 @@ private slots:
      * @brief      Confirm
      */
     void confirm();
+
+    /**
+     * @brief      Launch browser to order tiles
+     */
+    void action_order();
 };

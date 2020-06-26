@@ -84,7 +84,7 @@ void MapIO::save(const std::shared_ptr<Map>& map, const QString& filename) {
  *
  * @return     The bill of materials
  */
-QString MapIO::build_bom(const std::shared_ptr<Map>& map) const {
+QString MapIO::build_bom_string(const std::shared_ptr<Map>& map) const {
     QString result;
 
     std::unordered_map<std::string, unsigned int> tiles;
@@ -109,4 +109,26 @@ QString MapIO::build_bom(const std::shared_ptr<Map>& map) const {
     }
 
     return result;
+}
+
+/**
+ * @brief      Build the bill of materials
+ *
+ * @return     The bill of materials
+ */
+std::unordered_map<std::string, unsigned int> MapIO::build_bom_map(const std::shared_ptr<Map>& map) const {
+    std::unordered_map<std::string, unsigned int> tiles;
+    std::vector<std::string> tilenames;
+
+    for(const auto& tile : map->get_tiles()) {
+        std::string name = this->tile_manager->get_tilename(tile.second.tile_id).substr(0,4);
+        auto got = tiles.find(name);
+        if(got != tiles.end()) {
+            got->second++;
+        } else {
+            tiles.emplace(name, 1);
+        }
+    }
+
+    return tiles;
 }

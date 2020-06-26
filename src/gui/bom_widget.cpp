@@ -27,8 +27,15 @@
  * @param      parent  The parent
  */
 BomWidget::BomWidget(QWidget *parent) : QDialog(parent, Qt::Popup | Qt:: Dialog) {
+    QHBoxLayout *top_layout = new QHBoxLayout();
+    this->setLayout(top_layout);
+
+    // set BOM
+
+    QWidget *left_container = new QWidget(this);
+    top_layout->addWidget(left_container);
     QVBoxLayout *layout_main = new QVBoxLayout();
-    this->setLayout(layout_main);
+    left_container->setLayout(layout_main);
 
     this->text_edit = new QPlainTextEdit();
     layout_main->addWidget(text_edit);
@@ -45,8 +52,20 @@ BomWidget::BomWidget(QWidget *parent) : QDialog(parent, Qt::Popup | Qt:: Dialog)
     layout_buttons->addWidget(button_confirm);
     layout_buttons->addWidget(button_copy_to_clipboard);
 
+    // set shop buttons
+
+    QWidget *right_container = new QWidget(this);
+    top_layout->addWidget(right_container);
+    QVBoxLayout *shop_layout = new QVBoxLayout();
+    right_container->setLayout(shop_layout);
+    shop_layout->addWidget(new QLabel("Order direct at these webshops"));
+    QPushButton *button_mtechcave = new QPushButton("mtechcave.com");
+    shop_layout->addWidget(button_mtechcave);
+    shop_layout->addWidget(new QFrame());
+
     connect(button_copy_to_clipboard, SIGNAL(released()), this, SLOT(action_copy_to_clipboard()));
     connect(button_confirm, SIGNAL(released()), this, SLOT(confirm()));
+    connect(button_mtechcave, SIGNAL(released()), this, SLOT(action_order()));
 
     this->setWindowModality(Qt::WindowModal);
     this->show();
@@ -75,4 +94,50 @@ void BomWidget::confirm() {
  */
 BomWidget::~BomWidget() {
 
+}
+
+std::unordered_map<std::string, unsigned int> BomWidget::read_conversion_table(const QString& filename) {
+    QTemporaryDir tmp_dir;
+    QFile::copy(":/assets/shops/" + filename, tmp_dir.path() + filename);
+
+    std::ifstream infile((tmp_dir.path() + filename).toStdString());
+    std::string line;
+
+    std::unordered_map<std::string, unsigned int> convtable;
+
+    while(std::getline(infile, line)) {
+        std::vector<std::string> pieces;
+        boost::split(pieces, line, boost::is_any_of("\t "), boost::token_compress_on);
+        if(pieces.size() == 2) {
+            convtable.emplace(pieces[0], boost::lexical_cast<unsigned int>(pieces[1]));
+        }
+    }
+
+    infile.close();
+
+    return convtable;
+}
+
+/**
+ * @brief      Launch browser to order tiles
+ */
+void BomWidget::action_order() {
+    auto convtable = this->read_conversion_table("mtechcave_com.dat");
+
+    QString url = "https://mtechcave.com/cart/?add-to-cart=";
+
+    for(const auto& tile : this->bom) {
+        for(unsigned int i=0; i<tile.second; i++) {
+            url += QString::number(convtable.find(tile.first)->second) + ",";
+        }
+    }
+
+    if(url.size() > 2048) {
+        int ret = QMessageBox::critical(this, tr("Cannot submit this order"),
+                               tr("The url to submit this order is longer than 2048 characters. Please cut up your order in chunks."),
+                               QMessageBox::Ok,
+                               QMessageBox::Save);
+    } else {
+        QDesktopServices::openUrl(QUrl(url));
+    }
 }

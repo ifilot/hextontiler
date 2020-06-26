@@ -130,7 +130,8 @@ void InterfaceWindow::action_center_map() {
  */
 void InterfaceWindow::action_build_bom() {
     BomWidget bomwidget(this);
-    bomwidget.set_text(this->map_io->build_bom(this->map));
+    bomwidget.set_text(this->map_io->build_bom_string(this->map));
+    bomwidget.set_map(this->map_io->build_bom_map(this->map));
     bomwidget.exec();
 }
 
